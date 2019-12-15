@@ -44,7 +44,7 @@ var Game = {
     },
 
     addTower: function(x, y) {
-        if(Game.cash > 20){
+        if(Game.cash >= 20){
             Game.cash -= 20;
 
             var tower = Object.assign({}, Tower);
