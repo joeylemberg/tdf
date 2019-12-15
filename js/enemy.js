@@ -7,7 +7,7 @@ var Enemy = {
         ctx.fillStyle = "brown";
         ctx.fillRect(-1, -1, 10, 2);
     },
-    maxSpeed: 2,
+    maxSpeed: 1.5,
     maxHealth: 100,
     health: 100,
     speed: 2,
@@ -20,7 +20,7 @@ var Enemy = {
     wander: 25,
     theta: 0,
     timeToSpawn: 20,
-    cash: 2,
+    cash: 1,
     damage: 1,
 
 

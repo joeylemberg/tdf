@@ -2,23 +2,16 @@ var Game = {
     init: function() {
         Map.draw();
 
+        Input.init();
+
         Enemy.x = 500;
         Enemy.y = 100;
 
 
-        this.enemies = [];
-        for(var i = 0; i < 150; i++){
-            var enemy = Object.assign({}, Enemy);
-            enemy.x = -enemy.wander + Util.random() * enemy.wander;
-            enemy.y = -enemy.wander + Util.random() * enemy.wander;
-            enemy.speed = enemy.maxSpeed + enemy.maxSpeed * 0.1 * Util.random();
-            enemy.target = {x: Map.path[0].x, y: Map.path[0].y};
-            enemy.timeToSpawn = i * 10;
-            this.enemies.push(enemy);
-        }
+        this.spawnEnemies();
 
         this.towers = [];
-        var tower1 = Object.assign({}, Tower);
+        /*var tower1 = Object.assign({}, Tower);
         var tower2 = Object.assign({}, Tower);
         var tower3 = Object.assign({}, Tower);
         var tower4 = Object.assign({}, Tower);
@@ -43,12 +36,26 @@ var Game = {
         this.towers.push(tower4);
         this.towers.push(tower5);
         this.towers.push(tower6);
-        this.towers.push(tower7);
+        this.towers.push(tower7);*/
 
         
         Game.loop()
 
     },
+
+    addTower: function(x, y) {
+        if(Game.cash > 20){
+            Game.cash -= 20;
+
+            var tower = Object.assign({}, Tower);
+            tower.x = x;
+            tower.y = y;
+        this.towers.push(tower);
+
+
+        }
+
+    } ,
 
     loop: function(){
         var ctx = document.getElementById('sprites').getContext('2d');
@@ -64,6 +71,10 @@ var Game = {
         this.drawTowers();
         this.drawBooms();
 
+        if(this.enemies.length == 0){
+            this.spawnEnemies()
+        }
+
         requestAnimationFrame(() => {Game.loop();});
 
     },
@@ -73,8 +84,21 @@ var Game = {
     shots: [],
     booms: [],
 
-    cash: 0,
+    cash: 100,
     health: 100,
+
+    spawnEnemies: function() {
+        this.enemies = [];
+        for(var i = 0; i < 100; i++){
+            var enemy = Object.assign({}, Enemy);
+            enemy.x = -enemy.wander + Util.random() * enemy.wander;
+            enemy.y = -enemy.wander + Util.random() * enemy.wander;
+            enemy.speed = enemy.maxSpeed + enemy.maxSpeed * 0.1 * Util.random();
+            enemy.target = {x: Map.path[0].x, y: Map.path[0].y};
+            enemy.timeToSpawn = i * 10;
+            this.enemies.push(enemy);
+        }
+    },
 
     boom: function(x, y, r, damage, color, t){
         var boom = {
