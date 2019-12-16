@@ -3,11 +3,12 @@ var Game = {
         Map.draw();
 
         Input.init();
+        Menus.init();
 
         Enemy.x = 500;
         Enemy.y = 100;
 
-
+        this.startLevel();
         this.spawnEnemies();
 
         this.towers = [];
@@ -43,11 +44,28 @@ var Game = {
 
     },
 
-    addTower: function(x, y) {
-        if(Game.cash >= 20){
-            Game.cash -= 20;
+    enemyCount: 20,
 
-            var tower = Object.assign({}, Tower);
+    level: 1,
+    titleTimer: 0,
+    startLevel: function() {
+        this.titleTimer = 200;
+    },
+    renderTitle: function() {
+        var ctx = document.getElementById('sprites').getContext('2d');
+          ctx.font = 'bold 48px verdana';
+          ctx.fillStyle = "rgba(0,0,0,0.8);";
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = 2;
+          ctx.fillText('Level ' + this.level, 300, 300);
+          ctx.strokeText('Level ' + this.level, 300, 300);
+    },
+
+    addTower: function(x, y) {
+        if(Game.cash >= Menus.selectedTower.price){
+            Game.cash -= Menus.selectedTower.price;
+
+            var tower = Object.assign({}, Menus.selectedTower);
             tower.x = x;
             tower.y = y;
         this.towers.push(tower);
@@ -55,7 +73,7 @@ var Game = {
 
         }
 
-    } ,
+    },
 
     loop: function(){
         var ctx = document.getElementById('sprites').getContext('2d');
@@ -72,7 +90,16 @@ var Game = {
         this.drawBooms();
 
         if(this.enemies.length == 0){
-            this.spawnEnemies()
+            this.level++;
+            this.enemyCount += 30;
+            Enemy.maxSpeed *= 1.1;
+            this.startLevel();
+            this.spawnEnemies();
+        }
+
+        if(this.titleTimer > 0){
+            this.titleTimer--;
+            this.renderTitle();
         }
 
         requestAnimationFrame(() => {Game.loop();});
@@ -89,7 +116,7 @@ var Game = {
 
     spawnEnemies: function() {
         this.enemies = [];
-        for(var i = 0; i < 100; i++){
+        for(var i = 0; i < this.enemyCount; i++){
             var enemy = Object.assign({}, Enemy);
             enemy.x = -enemy.wander + Util.random() * enemy.wander;
             enemy.y = -enemy.wander + Util.random() * enemy.wander;
@@ -282,8 +309,10 @@ var Game = {
             var tower = this.towers[i];
             ctx.save();
             ctx.translate(tower.x, tower.y);
+
+            tower.drawBase(ctx);
             ctx.rotate(tower.theta);
-            tower.draw(ctx);
+            tower.drawGun(ctx);
             ctx.restore();
 
         }

@@ -1,4 +1,5 @@
 var Tower = {
+	name: 'tower',
 	x: 400,
 	y: 500,
 	theta: 0,
@@ -9,11 +10,23 @@ var Tower = {
 	shotDamage: 20,
 	boomColor: 'red',
 	shotRadius: 50,
+	price: 20,
 	shots: [],
-	draw: function(ctx) {
+	drawBase: function(ctx) {
 
+		ctx.beginPath();
 		ctx.fillStyle="rgb(200,200,240)";
-		ctx.fillRect(-9, -9, 18, 18);
+		ctx.fillRect(-10, -10, 20, 20);
+
+		ctx.lineWidth = 1;
+		ctx.strokeStyle="rgb(50,100,120)";
+		ctx.strokeRect(-10, -10, 20, 20);
+
+
+	},
+	
+	drawGun: function(ctx){
+
 		ctx.fillStyle="rgb(100,200,240)";
 		ctx.strokeStyle="rgb(50,100,120)";
 		ctx.lineWidth = 1;
@@ -29,7 +42,6 @@ var Tower = {
 		ctx.rect(-5, -5, 10, 10);
 		ctx.stroke();
 		ctx.fill();
-
 	},
 
 	drawShot: function(ctx) {
